@@ -1,0 +1,5 @@
+simulations with initially stationary state
+after some time, the leading car has been slowed down to 50 km/h
+
+sim1 - without overtaking, hwLength = 1000, N = 50 cars, initial distance d0 = 50 m
+sim3 - with overtaking, hwLength = 5000, N = 50,  d0 = 100
