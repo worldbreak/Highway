@@ -98,7 +98,7 @@ public class ControlPanel extends JPanel {
             return;
         CarArrayList.CarInfo car = (CarArrayList.CarInfo) carArrayList.cars.get(carIndex);
     //    CarList.CarInfo car = carList.cars[carIndex];
-        currentCarLabel.setText("Selected car: " + carIndex);
+        currentCarLabel.setText("Selected car: " + car.id);
         positionLabel.setText("Position x = " + Math.round(car.x) + " m");
         speedLabel.setText("Speed v = " + Math.round(Conversions.MStoKmH(car.v)) + " km/h");
         vFreeLabel.setText("Free speed vf = " + Math.round(Conversions.MStoKmH(car.vFree)) + " km/h");
@@ -111,7 +111,7 @@ public class ControlPanel extends JPanel {
         } else {
             CarArrayList.CarInfo nextCar = (CarArrayList.CarInfo) carArrayList.cars.get(iNext);
         //    CarList.CarInfo nextCar = carList.cars[iNext];
-            nextCarLabel.setText("Next car: " + iNext);
+            nextCarLabel.setText("Next car: " + nextCar.id);
             nextCarDistanceLabel.setText("Distance: s = " + Math.round(carArrayList.getFrontDistance(carIndex, iNext)) + " m");
             nextCarSpeedLabel.setText("Speed: v = " + Math.round(Conversions.MStoKmH(nextCar.v)) + " km/h");
         }
@@ -125,7 +125,7 @@ public class ControlPanel extends JPanel {
         } else {
             CarArrayList.CarInfo prevCar = (CarArrayList.CarInfo) carArrayList.cars.get(iPrev);
             //CarList.CarInfo prevCar = carList.cars[iPrev];
-            prevCarLabel.setText("Previous car: " + iPrev);
+            prevCarLabel.setText("Previous car: " + prevCar.id);
             prevCarDistanceLabel.setText("Distance: s = " + Math.round(carArrayList.getBackDistance(carIndex, iPrev)) + " m");
             prevCarSpeedLabel.setText("Speed: v = " + Math.round(Conversions.MStoKmH(prevCar.v)) + " km/h");
         }

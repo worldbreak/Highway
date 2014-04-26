@@ -9,9 +9,10 @@ public class CarSelector extends JComboBox {
        if (carnewlist.getCount()==0) return;
        if (position==-1) position=0;
        this.removeAllItems();
-       for (int i = 0; i < carnewlist.getCount(); i++)
-           this.addItem("Car " + i);
-
+       for (int i = 0; i < carnewlist.getCount(); i++) {
+           CarArrayList.CarInfo selectedCar = (CarArrayList.CarInfo) carnewlist.cars.get(i);
+           this.addItem("Car " + selectedCar.id);
+       }
        this.setSelectedIndex(position);
    }
 

@@ -118,7 +118,7 @@ public class Highway extends JFrame implements ComponentListener, Runnable {
                 if ((carii.x >= position) & (carii.x <= position + zoom)) {
                     int[] coords = transform(carii.x, 0);
                     g.setColor((i == selectedCar) ? Color.YELLOW : Color.WHITE);
-                    g.drawString("" + i, coords[0] + 30, roadBounds.y + roadBounds.height + 30);
+                    g.drawString("" + carii.id, coords[0] + 30, roadBounds.y + roadBounds.height + 30);
                 }
 
             }
@@ -131,6 +131,13 @@ public class Highway extends JFrame implements ComponentListener, Runnable {
 
     public void run() {
         while (animator != null) {
+            if (carArrayList.time == 86400){
+                    animator.interrupt();
+                    animator = null;
+                    runBtn.setText("Start simulation");
+                    fileCreator.finalize();
+                    System.out.println(carArrayList.matlabdata.getAllCarsInDay());
+            }
             int before = carArrayList.getCount();
             carArrayList.nextStep();
             int after = carArrayList.getCount();
@@ -146,7 +153,7 @@ public class Highway extends JFrame implements ComponentListener, Runnable {
                 fileCreator.writeStatus(carArrayList);
             }
             try {
-                  Thread.sleep(1);
+             //     Thread.sleep(0,1);
             } catch (Exception e) {
                 System.out.println("Thread problem");
             }
@@ -169,7 +176,7 @@ public class Highway extends JFrame implements ComponentListener, Runnable {
     ControlPanel controlPanel;
     FileCreator fileCreator;
 
-    int fileWriteStepsMax = 10;
+    int fileWriteStepsMax = 60;
     int fileWriteSteps = fileWriteStepsMax;
     boolean drawing = true;
 

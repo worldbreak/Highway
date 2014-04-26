@@ -59,7 +59,6 @@ public class CarArrayList {
     MatlabImport matlabdata = new MatlabImport("0170","01");
     private String defaultImageFile = "car.png";
     int timeStepData = 0;
-    double into60 = 0;
     int[] remaining = new int[3];
     double time60 = 0;
    //   int numberofcarspersecond = 4;
@@ -68,22 +67,27 @@ public class CarArrayList {
     public ArrayList cars = new ArrayList();
     double hwLength = 2700;
     boolean cyclic = false;
+    double carsToPoisson;
+    boolean add;
+    double numCars;
+
 
     public CarArrayList() {
    //            cars.add(new CarInfo(defaultImageFile));
-
         int first =  (int) matlabdata.getNumCars(timeStepData,0);
         remaining[1] = timeStepData;
         remaining[2] = 0;
         if (first == 0) {
           generateTimeLane1 +=60;
-          timeStepData++;
           remaining[0] = 0;
+          add = false;
+          numCars = 0;
         }
         else {
           generateTimeLane1 += getPoissonRandom(first,60);
-          into60 = generateTimeLane1;
           remaining[0] = first;
+          add = true;
+          numCars = first;
         }
 
 
@@ -214,8 +218,6 @@ public class CarArrayList {
     public void nextTime(){
         time += dt;
         time60 += dt;
-        if (time60>=60)
-            time60 = 60 - time60;
     }
 
     public void destroyCar(){
@@ -229,47 +231,40 @@ public class CarArrayList {
 
     public void nextStep() {
   //      CarArrayList old = copyCars(this);
+        if (time60>=59.99){
+            time60 = 0;
+            timeStepData++;
+            remaining[2]=remaining[0];
+            numCars = 4 + remaining[2];//matlabdata.getNumCars(timeStepData,0);
+            remaining[0]=(int) numCars;
+        }
 
+        if ((generateTimeLane1<=this.time+0.01)&(generateTimeLane1>=this.time-0.01)){
+            boolean generate;
+            generate = !add ? false : true;
+            add = true;
+        //    carsToPoisson = numCars + remaining[2];
+            // remaining 0 - number of cars to be generated, remaining 1 - timeStepData, remaining 2 - number of cars to be generated in this period
 
-            if ((generateTimeLane1<=this.time+0.01)&(generateTimeLane1>=this.time-0.01)){
-                double numCars = matlabdata.getNumCars(timeStepData,0);
-                double carsToPoisson = numCars + remaining[2];
-
-                if (remaining[1]!=timeStepData){
-                    remaining[2] = remaining[0];
-                    remaining[0] = (int) numCars;
-                    remaining[1] = timeStepData;
+            if (numCars==0){
+                generateTimeLane1 += 60 - (generateTimeLane1 % 60);
+                add = false;
+            }
+            else {
+                double plus;
+                do {
+                //  plus = getPoissonRandom(5,60);
+                  plus = 14;
                 }
+                while (plus>60);
 
-                if (carsToPoisson==0){
-                    generateTimeLane1 += 60 - (generateTimeLane1 % 60);
-                    timeStepData++;
-                  //  remaining = numCars;
-                }
-                else {
-                    double plus;
-                    do {
-                      plus = getPoissonRandom(carsToPoisson,60);
-                    }
-                    while (plus>60);
-
-                    generateTimeLane1+=plus;
-                    into60+=plus;
-                    if (into60>=60){
-                        into60 = into60 - 60;
-                        timeStepData++;
-                    }
-                    if (!((time60<=0.001)|(time60>=59.999))){
-                        remaining[0] --;
-                        System.out.println("remaining = " + Arrays.toString(remaining));
-                        System.out.println("numcars = " +numCars);
-                        System.out.println("timeStepData = " +timeStepData);
-                        System.out.println("time = " +time);
-                        System.out.println("-----------------");
-                        generateCar();
-                    }
+                generateTimeLane1+=plus;
+                if (generate){
+                    remaining[0] --;
+                    generateCar();
                 }
             }
+        }
 
         if (cars==null){
             nextTime();
